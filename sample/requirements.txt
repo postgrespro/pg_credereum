@@ -1,0 +1,3 @@
+pyOpenSSL
+psycopg2
+web3

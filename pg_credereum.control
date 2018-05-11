@@ -1,0 +1,6 @@
+# pg_credereum extension
+comment = 'pg_redereum extension make a PostgreSQL instance the part of Credereum platform'
+default_version = '0.1'
+module_pathname = '$libdir/pg_credereum'
+relocatable = false
+

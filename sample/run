@@ -1,0 +1,74 @@
+#!/bin/bash
+set -e
+
+echo Terminate geth instances...
+while killall geth; do sleep 1; done
+
+echo Prepare private Ethereum network...
+geth="geth --datadir=eth-private --verbosity 0 --nodiscover"
+
+solc ../hts_eth/HashStorage.sol --combined-json=abi,bin > ../hts_eth/HashStorage.js
+
+echo "x=" > contract.js 
+cat ../hts_eth/HashStorage.js >> contract.js
+cat >> contract.js <<EOF
+	personal.newAccount("");
+	personal.unlockAccount(eth.accounts[0],"",0);
+	miner.setEtherbase(eth.accounts[0]);
+	miner.start();
+	admin.sleepBlocks(5);
+	ctr = x.contracts[Object.keys(x.contracts)];
+	abi = JSON.parse(ctr.abi);
+	contract = eth.contract(abi);
+	upload = contract.new({from:eth.accounts[0], data:("0x" + ctr.bin), gas:1000000});
+	admin.sleepBlocks(5);
+	creationTx = upload.transactionHash;
+	receipt = eth.getTransactionReceipt(creationTx);
+	instance = contract.at(receipt.contractAddress);
+	console.log("pg_credereum.eth_source_addr='" + eth.accounts[0] + "'");
+	console.log("pg_credereum.eth_contract_addr='" + instance.address + "'");
+EOF
+
+rm -rf eth-private
+$geth init ../hts_eth/CustomGenesis.json
+
+addr=$($geth --exec='loadScript("contract.js");' console)
+echo "$addr"
+
+echo Start geth miner and unblock the source account...
+$geth --rpc --mine < /dev/null > /dev/null 2>&1 &
+sleep 1;
+while ! $geth --exec='personal.unlockAccount(eth.accounts[0], "", 0)' attach ipc:eth-private/geth.ipc; do
+	sleep 1;
+done
+
+echo Start postgres...
+export PGPORT=6543
+export PGDATA=db
+export conf=$PGDATA/postgresql.conf
+pg_ctl stop ||:
+rm -r $PGDATA ||:
+initdb > /dev/null
+
+echo "$addr" | head -2 >> $conf
+cat >> $conf <<EOF
+pg_credereum.eth_end_point='127.0.0.1:8545'
+shared_preload_libraries='pg_credereum'
+EOF
+
+pg_ctl start -l $PGDATA/logfile
+
+echo Install pg_credereum and create sample tables...
+psql -qf sample.sql postgres
+
+echo Modify some rows...
+ids=$(./sample.py | grep 'id = ' | sed 's/.*id = \([0-9]*\).*/\1/g' | head -n 10 | tr '\n' ' ')
+
+echo Check history...
+echo $ids | xargs ./history_proof.py
+
+echo Wait and check again...
+sleep 1
+echo $ids | xargs ./history_proof.py
+
+echo Done.

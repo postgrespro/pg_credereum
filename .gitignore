@@ -1,0 +1,11 @@
+.deps
+*.o
+*.so
+results
+tmp_install
+__pycache__
+/hts_eth/HashStorage.js
+/sample/contract.js
+/sample/init.js
+/sample/db
+/sample/eth-private

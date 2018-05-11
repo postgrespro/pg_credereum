@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------
+ *
+ * ethereum.h
+ *		Headers of routines for integration with Ethereum.
+ *
+ * Copyright (c) 2017-2018, Postgres Professional
+ *
+ * Author: Alexander Kuzmenkov <a.kuzmenkov@postgrespro.ru>
+ *
+ * IDENTIFICATION
+ *	  contrib/pg_credereum/ethereum.h
+ *
+ *-------------------------------------------------------------------------
+ */
 #ifndef ETHEREUM_H
 #define ETHEREUM_H
 

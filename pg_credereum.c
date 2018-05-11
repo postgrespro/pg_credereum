@@ -1,3 +1,18 @@
+/*-------------------------------------------------------------------------
+ *
+ * pg_credereum.c
+ *		C-functions and hooks providing functionality of pg_credereum
+ *		extension.
+ *
+ * Copyright (c) 2017-2018, Postgres Professional
+ *
+ * Author: Alexander Korotkov <a.korotkov@postgrespro.ru>
+ *
+ * IDENTIFICATION
+ *	  contrib/pg_credereum/pg_credereum.c
+ *
+ *-------------------------------------------------------------------------
+ */
 #include "postgres.h"
 #include "fmgr.h"
 #include "funcapi.h"

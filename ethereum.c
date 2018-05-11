@@ -1,3 +1,17 @@
+/*-------------------------------------------------------------------------
+ *
+ * ethereum.c
+ *		Routines for integration with Ethereum.
+ *
+ * Copyright (c) 2017-2018, Postgres Professional
+ *
+ * Author: Alexander Kuzmenkov <a.kuzmenkov@postgrespro.ru>
+ *
+ * IDENTIFICATION
+ *	  contrib/pg_credereum/ethereum.c
+ *
+ *-------------------------------------------------------------------------
+ */
 #include "ethereum.h"
 #include "pg_credereum.h"
 

@@ -3,6 +3,22 @@
 -- complain if script is sourced in psql, rather than via CREATE EXTENSION
 \echo Use "CREATE EXTENSION pg_credereum" to load this file. \quit
 
+/*-------------------------------------------------------------------------
+ *
+ * pg_credereum--0.1.sql
+ *		SQL-functions and declarations providing functionality of
+ *		pg_credereum extension.
+ *
+ * Copyright (c) 2017-2018, Postgres Professional
+ *
+ * Author: Alexander Korotkov <a.korotkov@postgrespro.ru>
+ *
+ * IDENTIFICATION
+ *	  contrib/pg_credereum/pg_credereum--0.1.sql
+ *
+ *-------------------------------------------------------------------------
+ */
+
 CREATE FUNCTION credereum_acc_trigger()
 RETURNS trigger
 AS 'MODULE_PATHNAME'
